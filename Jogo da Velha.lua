@@ -1,34 +1,26 @@
--- game set
+list = {
+  A1 = "_", A2 = "_", A3 = "_", 
+  B1 = "_", B2 = "_", B3 = "_", 
+  C1 = " ", C2 = " ", C3 = " ",
+}
+
 function map()
-    c1 = "_"
-    c2 = "_"
-    c3 = " "
-    c4 = " "
-    p = "X"
+  for i = 1, 3 do
+    local txt = string.char(64 + i)
+    print(list[txt..1].."|"..list[txt..2].."|"..list[txt..3])
+  end
 end
 
+print("[[JOGO DA VELHA]] versão teste de mapeamento\npara jogar apenas digite de A a C mais um número de 1 a 3, exemplo: C3")
 map()
-print(c1.."|"..c2.."\n"..c3.."|"..c4)
-
+local p = "X"
 while 1 == 1 do
-    resp = io.read("*n")
-    if resp == 1 then
-        c1 = p
-    elseif resp == 2 then
-        c2 = p
-    elseif resp == 3 then
-        c3 = p
-    elseif resp == 4 then
-        c4 = p
-    else
-        print("resposta invalida")
-    end
-    print(c1.."|"..c2.."\n"..c3.."|"..c4)
-    if p == "X" then
-        p = "O"
-    else
-        p = "X"
-    end
+  resp = io.read():upper()
+  list[resp] = p
+  map()
+  if p == "X" then
+    p = "O"
+  else
+    p = "X"
+  end
 end
-
---gamerule
