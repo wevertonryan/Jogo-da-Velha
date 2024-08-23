@@ -1,4 +1,6 @@
+cfg = 3
 list = { --as 9 casa de um jogo da velha, as letras são linhas horizontais, e os números as colunas verticais, ex: A1 seria a superior esquerda
+  afl = 64 + cfg, nml = 48 + cfg,
   A1 = "_", A2 = "_", A3 = "_", 
   B1 = "_", B2 = "_", B3 = "_", 
   C1 = " ", C2 = " ", C3 = " ",
@@ -9,11 +11,14 @@ function vald() --valida a resposta que o jogador deu de uma forma que o codigo 
     local resp = io.read():upper() --resposta do jogador com função que deixa respota maiuscula para poder corresponder a variavel list
     l = string.sub(resp, 1, 1) --pega o primeiro caracter da resposta do jogador presumindo que é uma letra, já que o formato padrão é letra depois número
     n = string.sub(resp, 2, 2) --pega o segundo caracter, presumindo que seja um número
-    if string.byte(l) >= 65 and string.byte(l) <= 90 and string.byte(n) >= 48 and string.byte(n) <= 57 then
+    if n == "" then
+      n = " "
+    end
+    if string.byte(l) >= 65 and string.byte(l) <= list["afl"] and string.byte(n) >= 48 and string.byte(n) <= list["nml"] then
       --65 é A em byte, 90 é Z em byte, assim ele verifica se é realmente uma letra
       --é a mesma coisa com o número
       val = true -- está validando como verdadeiro que o valor que temos está padronizado para funcionar no código
-    elseif string.byte(l) >= 48 and string.byte(l) <= 57 and string.byte(n) >= 65 and string.byte(n) <= 90 then
+    elseif string.byte(l) >= 48 and string.byte(l) <= list["nml"] and string.byte(n) >= 65 and string.byte(n) <= list["afl"] then
       --é para caso o jogador tenha colocado primeiro número e depois letra
       --só inverte os valores e valida como verdadeiro
       l = string.sub(resp, 2, 2)
@@ -42,13 +47,18 @@ function map(x) --mapeia o jogo em tela como jogo da velha
   end
 end
 
-print("[[JOGO DA VELHA]] versão teste de mapeamento\npara jogar apenas digite de A a C mais um número de 1 a 3, exemplo: C3")
-map(1)
-local p = "X"
-while 1 == 1 do
-  resp = vald()
-  list[resp] = p
-  map()
+function rule()
+  repeat
+    local resp = vald()
+    local val = false
+    if list[resp] == "X" or list[resp] == "O" then
+      print("resposta inválida")
+      val = false
+    else
+      list[resp] = p
+      val = true
+    end
+  until val == true
   if p == "X" then
     p = "O"
   else
@@ -56,9 +66,17 @@ while 1 == 1 do
   end
 end
 
+print("[[JOGO DA VELHA]] versão teste de mapeamento\npara jogar apenas digite de A a C mais um número de 1 a 3, exemplo: C3")
+map(1)
+p = "X"
+while 1 == 1 do
+  rule()
+  map(2)
+end
+
 --(feito) impossibilitar mandar respostas que não estejam em letra número
---não permitir colocar um simbolo em uma casa já ocupada
---(feito)printar mapeamento ABC/123
+--(feito) não permitir colocar um simbolo em uma casa já ocupada
+--(feito) printar mapeamento ABC/123
 --regra para vencedor e perdedor
 --mensagem de vítoria/derrota
 --IA para jogar contra
